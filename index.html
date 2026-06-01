@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The LLM Learning Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e6;
+    --paper: #fffdf8;
+    --ink: #211d18;
+    --ink-soft: #4a4339;
+    --accent: #d6451f;
+    --accent-soft: #f0a98e;
+    --highlight: #ffe27a;
+    --rule: #ddd3c0;
+    --code-bg: #2a251f;
+    --code-ink: #f3e9d4;
+    --teal: #2c6e6a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 12% 18%, rgba(214,69,31,0.06), transparent 40%),
+      radial-gradient(circle at 88% 72%, rgba(255,226,122,0.14), transparent 45%);
+    color: var(--ink);
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 19px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  }
+
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 28px 120px; }
+
+  /* HEADER */
+  header { padding: 84px 0 44px; }
+
+  .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: inline-block;
+    padding: 6px 12px;
+    border: 1.5px solid var(--accent);
+    border-radius: 100px;
+    margin-bottom: 26px;
+    animation: rise 0.7s ease-out both;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: clamp(2.6rem, 7.5vw, 4.3rem);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    margin-bottom: 22px;
+    animation: rise 0.7s ease-out 0.08s both;
+  }
+  h1 .squiggle { color: var(--accent); font-style: italic; }
+
+  .standfirst {
+    font-size: 1.28rem;
+    color: var(--ink-soft);
+    font-style: italic;
+    max-width: 42ch;
+    animation: rise 0.7s ease-out 0.16s both;
+  }
+
+  .byline {
+    margin-top: 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    animation: rise 0.7s ease-out 0.24s both;
+  }
+  .byline .dot { width: 5px; height: 5px; background: var(--accent); border-radius: 50%; }
+
+  .header-rule {
+    margin-top: 40px; height: 3px; background: var(--ink);
+    transform-origin: left; animation: wipe 0.9s ease-out 0.3s both;
+  }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes wipe { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+  /* TRACK HEADINGS */
+  .track-head { margin: 64px 0 6px; }
+  .track-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent); display: block; margin-bottom: 6px;
+  }
+  .track-head h2 {
+    font-family: 'Fraunces', serif; font-weight: 900;
+    font-size: clamp(1.9rem, 5vw, 2.6rem); letter-spacing: -0.015em; line-height: 1.05;
+  }
+  .track-head p { color: var(--ink-soft); font-style: italic; margin-top: 8px; max-width: 52ch; }
+  .track-rule { width: 60px; height: 4px; background: var(--accent); margin: 18px 0 8px; }
+
+  /* PHASE */
+  .phase { margin-top: 38px; }
+  .phase-label {
+    font-family: 'Fraunces', serif; font-weight: 900;
+    font-size: 1.35rem; display: flex; align-items: baseline; gap: 12px;
+    border-bottom: 2px solid var(--ink); padding-bottom: 8px; margin-bottom: 18px;
+  }
+  .phase-label .ph-num {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+    color: var(--paper); background: var(--ink);
+    padding: 3px 9px; border-radius: 100px; letter-spacing: 0.1em;
+  }
+  .phase-label .ph-aside {
+    margin-left: auto; font-family: 'Newsreader', serif; font-style: italic;
+    font-weight: 400; font-size: 0.92rem; color: var(--ink-soft);
+  }
+
+  /* RESOURCE CARDS */
+  .cards { display: flex; flex-direction: column; gap: 12px; }
+
+  .card {
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 12px;
+    padding: 18px 20px;
+    box-shadow: 4px 4px 0 var(--ink);
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+    display: grid; grid-template-columns: 40px 1fr; gap: 16px; align-items: start;
+  }
+  .card:hover { transform: translate(-3px, -3px); box-shadow: 7px 7px 0 var(--accent); }
+
+  .card .seq {
+    font-family: 'Fraunces', serif; font-weight: 900; font-size: 1.5rem;
+    color: var(--accent); line-height: 1; padding-top: 2px;
+  }
+
+  .card .title {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: 1.12rem;
+    line-height: 1.25; margin-bottom: 4px;
+  }
+  .card .title a { color: var(--ink); text-decoration: none; border-bottom: 2px solid var(--accent-soft); }
+  .card .title a:hover { border-bottom-color: var(--accent); color: var(--accent); }
+  .card .meta {
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft);
+    margin-bottom: 6px; display: inline-block;
+  }
+  .card .desc { font-size: 1rem; color: var(--ink-soft); line-height: 1.5; }
+
+  .pill {
+    font-family: 'JetBrains Mono', monospace; font-size: 9.5px; letter-spacing: 0.1em;
+    text-transform: uppercase; padding: 2px 8px; border-radius: 100px;
+    background: var(--highlight); color: var(--ink); margin-left: 6px; vertical-align: middle;
+  }
+  .pill.safety { background: var(--accent); color: var(--paper); }
+  .pill.listen { background: var(--teal); color: var(--paper); }
+  .pill.dup { background: var(--rule); color: var(--ink-soft); }
+
+  /* SIDE / NOTE BLOCK */
+  .note {
+    background: var(--code-bg); color: var(--code-ink);
+    border-radius: 14px; padding: 24px 26px; margin: 34px 0;
+  }
+  .note .label {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--accent-soft); margin-bottom: 8px;
+  }
+  .note h3 { font-family: 'Fraunces', serif; font-size: 1.3rem; margin-bottom: 8px; }
+  .note p { font-size: 0.98rem; color: #d8cdb8; margin-bottom: 0; }
+  .note a { color: var(--highlight); }
+
+  /* SHORTCUT BOX */
+  .shortcut {
+    border: 2px dashed var(--accent); border-radius: 14px;
+    padding: 22px 24px; margin: 40px 0 0; background: rgba(214,69,31,0.05);
+  }
+  .shortcut h3 { font-family: 'Fraunces', serif; font-size: 1.25rem; margin-bottom: 8px; }
+  .shortcut p { font-size: 1rem; color: var(--ink-soft); margin-bottom: 0; }
+  .shortcut b { color: var(--accent); }
+
+  footer {
+    margin-top: 72px; padding-top: 28px; border-top: 3px solid var(--ink);
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.05em;
+    color: var(--ink-soft); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+  footer .end-mark { color: var(--accent); }
+
+  @media (max-width: 560px) {
+    body { font-size: 17px; }
+    .wrap { padding: 0 18px 80px; }
+    header { padding: 56px 0 36px; }
+    .card { grid-template-columns: 30px 1fr; gap: 12px; padding: 16px; }
+    .phase-label .ph-aside { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="kicker">Learning Roadmap</span>
+    <h1>From zero to <span class="squiggle">LLMs</span> &mdash; in order.</h1>
+    <p class="standfirst">A sequenced reading path through the pile of links &mdash; foundations first, frontier last &mdash; with the ops &amp; setup stuff kept separate.</p>
+    <div class="byline">
+      <span>23 resources</span>
+      <span class="dot"></span>
+      <span>2 tracks</span>
+      <span class="dot"></span>
+      <span>Follow top to bottom</span>
+    </div>
+    <div class="header-rule"></div>
+  </header>
+
+  <!-- ================= TRACK 1 ================= -->
+  <div class="track-head">
+    <span class="track-tag">/ Track 01</span>
+    <h2>The LLM path</h2>
+    <p>Work through these roughly in order. Each phase assumes the one before it.</p>
+    <div class="track-rule"></div>
+  </div>
+
+  <!-- PHASE 0 -->
+  <div class="phase">
+    <div class="phase-label"><span class="ph-num">PHASE 0</span> ML foundations <span class="ph-aside">start here</span></div>
+    <div class="cards">
+      <div class="card">
+        <div class="seq">1</div>
+        <div>
+          <span class="meta">d2l.ai &middot; reading</span>
+          <div class="title"><a href="https://d2l.ai/chapter_linear-regression/linear-regression.html" target="_blank" rel="noopener">Linear Regression</a></div>
+          <div class="desc">The bedrock idea under every neural net: fitting parameters to data. If nothing else clicks, this should.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="seq">2</div>
+        <div>
+          <span class="meta">PiML Toolbox &middot; reading</span>
+          <div class="title"><a href="https://selfexplainml.github.io/PiML-Toolbox/_build/html/guides/models/reludnn.html" target="_blank" rel="noopener">ReLU Deep Neural Networks</a></div>
+          <div class="desc">How a basic deep network is assembled from simple ReLU units &mdash; the jump from regression to "deep learning."</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="phase">
+    <div class="phase-label"><span class="ph-num">PHASE 1</span> How LLMs actually work</div>
+    <div class="cards">
+      <div class="card">
+        <div class="seq">3</div>
+        <div>
+          <span class="meta">arXiv 1706.03762 &middot; paper</span>
+          <div class="title"><a href="https://arxiv.org/pdf/1706.03762" target="_blank" rel="noopener">Attention Is All You Need</a></div>
+          <div class="desc">The foundational paper. Introduces the Transformer &mdash; the architecture every modern LLM is built on. Dense, but everything downstream assumes it.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="seq">4</div>
+        <div>
+          <span class="meta">tedkyi.github.io &middot; reading</span>
+          <div class="title"><a href="https://tedkyi.github.io/llm-inference/chapters/intro.html" target="_blank" rel="noopener">LLM Inference</a></div>
+          <div class="desc">What actually happens when a model generates text, one token at a time.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="seq">5</div>
+        <div>
+          <span class="meta">arXiv 2301.06627 &middot; paper</span>
+          <div class="title"><a href="https://arxiv.org/pdf/2301.06627" target="_blank" rel="noopener">Dissociating Language &amp; Thought in LLMs</a></div>
+          <div class="desc">A conceptual lens on what these models do and don't "understand." Best read once the mechanics make sense.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase">
+    <div class="phase-label"><span class="ph-num">PHASE 2</span> The current landscape <span class="ph-aside">skim, don't study</span></div>
+    <div class="cards">
+      <div class="card">
+        <div class="seq">6</div>
+        <div>
+          <span class="meta">Creole Studios &middot; survey</span>
+          <div class="title"><a href="https://www.creolestudios.com/top-llms/" target="_blank" rel="noopener">Top LLMs</a></div>
+          <div class="desc">A "who's who" of current models to orient yourself.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="seq">7</div>
+        <div>
+          <span class="meta">Shakudo &middot; survey</span>
+          <div class="title"><a href="https://www.shakudo.io/blog/top-9-large-language-models" target="_blank" rel="noopener">Top 9 Large Language Models</a></div>
+          <div class="desc">Same purpose, second opinion. Quick to read.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase">
+    <div class="phase-label"><span class="ph-num">PHASE 3</span> Using LLMs &mdash; prompting</div>
+    <div class="cards">
+      <div class="card">
+        <div class="seq">8</div>
+        <div>
+          <span class="meta">Google Cloud &middot; reading</span>
+          <div class="title"><a href="https://cloud.google.com/discover/what-is-prompt-engineering?hl=en" target="_blank" rel="noopener">What Is Prompt Engineering?</a></div>
+          <div class="desc">The gentle intro to talking to models effectively.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="seq">9</div>
+        <div>
+          <span class="meta">promptingguide.ai &middot; reference</span>
+          <div class="title"><a href="https://www.promptingguide.ai/techniques" target="_blank" rel="noopener">Prompting Techniques</a></div>
+          <div class="desc">The deeper reference &mdash; few-shot, chain-of-thought, and the rest. Bookmark it.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="phase">
+    <div class="phase-label"><span class="ph-num">PHASE 4</span> Building agents</div>
+    <div class="cards">
+      <div class="card">
+        <div class="seq">10</div>
+        <div>
+          <span class="meta">Google &middot; PDF primer</span>
+          <div class="title"><a href="https://www.hkdca.com/wp-content/uploads/2025/11/introduction-to-agents-google.pdf" target="_blank" rel="noopener">Introduction to Agents</a></div>
+          <div class="desc">Conceptual primer on what an "agent" is. Read first in this phase.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="seq">11</div>
+        <div>
+          <span class="meta">Kaggle &middot; course</span>
+          <div class="title"><a href="https://www.kaggle.com/learn-guide/5-day-agents" target="_blank" rel="noopener">5-Day Agents Course</a></div>
+          <div class="desc">Hands-on follow-up to the primer.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="seq">12</div>
+        <div>
+          <span class="meta">IBM &middot; reading <span class="pill dup">listed 2&times;</span></span>
+          <div class="title"><a href="https://www.ibm.com/think/topics/langgraph" target="_blank" rel="noopener">LangGraph</a></div>
+          <div class="desc">A framework for building agent workflows. (This URL appeared twice in your list &mdash; it's one resource.)</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="seq">13</div>
+        <div>
+          <span class="meta">LangChain &middot; reading</span>
+          <div class="title"><a href="https://www.langchain.com/blog/planning-for-agents" target="_blank" rel="noopener">Planning for Agents</a></div>
+          <div class="desc">How agents break work into multi-step plans.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="seq">14</div>
+        <div>
+          <span class="meta">Google Developers &middot; reading</span>
+          <div class="title"><a href="https://developers.googleblog.com/developers-guide-to-ai-agent-protocols/" target="_blank" rel="noopener">Developer's Guide to AI Agent Protocols</a></div>
+          <div class="desc">How agents communicate with tools and with each other.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="seq">15</div>
+        <div>
+          <span class="meta">Google DeepMind &middot; SSRN 6372438 <span class="pill safety">safety</span></span>
+          <div class="title"><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6372438" target="_blank" rel="noopener">AI Agent Traps</a></div>
+          <div class="desc">The "what goes wrong" reading. Maps six categories of adversarial web content that can hijack autonomous agents &mdash; content injection, semantic manipulation, memory poisoning, and more. Read once you understand how agents act.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 5 -->
+  <div class="phase">
+    <div class="phase-label"><span class="ph-num">PHASE 5</span> Deeper &amp; frontier <span class="ph-aside">optional</span></div>
+    <div class="cards">
+      <div class="card">
+        <div class="seq">16</div>
+        <div>
+          <span class="meta">Medium &middot; technical</span>
+          <div class="title"><a href="https://medium.com/@omkarpast/mastering-cuda-kernel-development-a-comprehensive-guide-1f3032666b94" target="_blank" rel="noopener">Mastering CUDA Kernel Development</a></div>
+          <div class="desc">Low-level GPU programming &mdash; what makes training and inference fast. Only worth it when you want under-the-hood depth.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="seq">17</div>
+        <div>
+          <span class="meta">Dwarkesh Podcast &middot; <span class="pill listen">listen</span></span>
+          <div class="title"><a href="https://open.spotify.com/episode/5qiibwoBWY5rXyflK7WJzH" target="_blank" rel="noopener">Dylan Patel on Scaling AI Compute</a></div>
+          <div class="desc">The three bottlenecks to scaling compute &mdash; logic, memory, power &mdash; plus the economics of labs, hyperscalers, and foundries.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="seq">18</div>
+        <div>
+          <span class="meta">NVIDIA GTC S82167 &middot; <span class="pill listen">watch</span></span>
+          <div class="title"><a href="https://www.nvidia.com/en-us/on-demand/session/gtc26-s82167/" target="_blank" rel="noopener">Jeff Dean &amp; Bill Dally: AI's Next Frontier</a></div>
+          <div class="desc">Google's and NVIDIA's chief scientists on where AI is heading. Big-picture.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="seq">19</div>
+        <div>
+          <span class="meta">Spotify &middot; <span class="pill listen">listen</span></span>
+          <div class="title"><a href="https://open.spotify.com/episode/1viBRy6dQdlSw0OdFvogXB" target="_blank" rel="noopener">Podcast episode (unconfirmed)</a></div>
+          <div class="desc">Couldn't confirm this episode's title/content &mdash; likely an AI talk given the company it keeps. Worth a quick check on your end.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDE TRACK -->
+  <div class="note">
+    <div class="label">Side reading &middot; interpretable / responsible ML</div>
+    <h3>Interpretable XGBoost <span style="font-weight:400;font-size:0.85rem;opacity:0.8;">(arXiv 2410.19067)</span></h3>
+    <p>A fair, interpretable model for binary classification, aimed at fair lending. This &mdash; and the PiML/ReLU link above &mdash; is really about <em>tabular &amp; interpretable ML</em>, not LLMs specifically. Useful if you care about model fairness and explainability, but it's a parallel track, not on the LLM critical path. <a href="https://arxiv.org/pdf/2410.19067" target="_blank" rel="noopener">Read &rarr;</a></p>
+  </div>
+
+  <!-- ================= TRACK 2 ================= -->
+  <div class="track-head">
+    <span class="track-tag">/ Track 02</span>
+    <h2>Operational &amp; setup</h2>
+    <p>Not LLM theory &mdash; this is the build, ship, and run-it-yourself cluster. Dip in as needed.</p>
+    <div class="track-rule"></div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-label"><span class="ph-num">SET UP</span> Vibe coding &amp; Claude</div>
+    <div class="cards">
+      <div class="card">
+        <div class="seq">A</div>
+        <div>
+          <span class="meta">gexijin.github.io &middot; tutorial</span>
+          <div class="title"><a href="https://gexijin.github.io/vibe/" target="_blank" rel="noopener">Vibe</a></div>
+          <div class="desc">Vibe coding with Claude Code, Docker, and VS Code. Your "get set up and actually build something" resource.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-label"><span class="ph-num">SHIP</span> Deployment &amp; hosting</div>
+    <div class="cards">
+      <div class="card">
+        <div class="seq">B</div>
+        <div>
+          <span class="meta">CloudThat &middot; tutorial</span>
+          <div class="title"><a href="https://www.cloudthat.com/resources/blog/build-and-host-a-free-website-using-replit-and-aws-free-tier" target="_blank" rel="noopener">Build &amp; Host a Free Website (Replit + AWS)</a></div>
+          <div class="desc">Getting an app online using free tiers.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-label"><span class="ph-num">OPS</span> Kubernetes / DevOps</div>
+    <div class="cards">
+      <div class="card">
+        <div class="seq">C</div>
+        <div>
+          <span class="meta">Udemy &middot; course</span>
+          <div class="title"><a href="https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests/" target="_blank" rel="noopener">Certified Kubernetes Administrator (CKA)</a></div>
+          <div class="desc">Container orchestration &mdash; its own discipline entirely. A destination, not a detour.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="shortcut">
+    <h3>Short on time?</h3>
+    <p>The spine is Phases 0&ndash;4. If you only do five things: <b>#3</b> (Transformer), <b>#4</b> (inference), <b>#8&ndash;9</b> (prompting), and <b>#10&ndash;11</b> (agents). That takes you from "what is it" to "I can build with it." Everything else is depth or deployment.</p>
+  </div>
+
+  <footer>
+    <span>LLM Learning Roadmap &middot; companion to "What even is an LLM?"</span>
+    <span class="end-mark">&#9632; &#9632; &#9632;</span>
+  </footer>
+
+</div>
+</body>
+</html>
